@@ -1,0 +1,23 @@
+{
+  "name": "photos-converter",
+  "version": "1.0.0",
+  "scripts": {
+    "process:scratch": "bun process-scratch.ts",
+    "convert": "redrun --series convert:avif",
+    "convert:webp": "bun convert-webp.ts",
+    "convert:avif": "bun convert-avif.ts",
+    "clean": "rimraf dist node_modules"
+  },
+  "devDependencies": {
+    "@types/cli-progress": "^3.11.6",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^25.5.0",
+    "cli-progress": "^3.12.0",
+    "fs-extra": "^11.3.4",
+    "p-limit": "^7.3.0",
+    "path": "^0.12.7",
+    "redrun": "^13.0.3",
+    "sharp": "^0.34.5",
+    "uuid": "13.0.0"
+  }
+}
