@@ -1,32 +1,71 @@
-## Photos Converter
+# Photos Converter
 
-Small local utilities for converting source images into WebP and AVIF formats for use by the travel apps.
+Local utilities for converting images to optimized `AVIF` and `WebP` formats.
 
-### Inputs and Outputs
+## Inputs and Outputs
 
-- **Input directory**: `input_images/`
-- **Output directory**: `output_images/`
+- Input directory: `input_images/`
+- Output directory: `output_images/`
 
-Place original JPEG/PNG files in `input_images/`; converted images will be written to `output_images/` with the same base filename.
+Drop source images into `input_images/` and run one of the commands below.  
+Converted images are written to `output_images/` using UUID-based filenames.
 
-### Setup
+## Setup
 
 ```bash
-cd photos-converter
 npm ci
 ```
 
-### Commands
+## Quick Commands
 
-- **Convert to WebP**
-
-```bash
-npx tsx convert-webp.ts
-```
-
-- **Convert to AVIF**
+### Convert to AVIF
 
 ```bash
-npx tsx convert-avif.ts
+npm run convert:avif
 ```
 
+### Convert to WebP
+
+```bash
+npm run convert:webp
+```
+
+## Unified CLI
+
+Use the shared CLI for both formats:
+
+```bash
+bun src/convert.ts <format> [options]
+```
+
+Examples:
+
+```bash
+bun src/convert.ts avif
+bun src/convert.ts webp --input ./input_images --output ./output_images --concurrency 8
+```
+
+Options:
+
+- `-f, --format <avif|webp>`
+- `-i, --input <dir>`
+- `-o, --output <dir>`
+- `-c, --concurrency <number>`
+- `-h, --help`
+
+## Supported Input Formats
+
+`.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`, `.tiff`, `.bmp`, `.avif`
+
+## Project Structure
+
+- `convert-avif.ts` - AVIF convenience wrapper
+- `convert-webp.ts` - WebP convenience wrapper
+- `src/convert.ts` - unified CLI entry point
+- `src/utils.ts` - shared conversion pipeline
+
+## Documentation
+
+- `architecture.md` - architecture and conversion flow
+- `contributing.md` - contribution guidelines
+- `license.md` - project license

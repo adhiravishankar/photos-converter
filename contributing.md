@@ -7,32 +7,34 @@ This project is intentionally small and focused, so changes should stay simple, 
 
 ## Development Setup
 
-1. Install dependencies:
+Dependency installation is package-manager agnostic. Bun is recommended, but npm/pnpm/yarn are also fine if the lockfile/workflow is aligned for your environment.
+
+1. Install dependencies (Bun example):
 
 ```bash
-npm ci
+bun install
 ```
 
-2. Add sample images to:
+1. Add sample images to:
    - `input_images/`
 
-3. Run converters:
-   - `bun convert.ts avif`
-   - `bun convert.ts webp`
+1. Run converters (Bun):
+   - `bun src/convert.ts avif`
+   - `bun src/convert.ts webp`
 
 ## Project Structure
 
-- `convert.ts`: CLI entry point.
+- `src/convert.ts`: CLI entry point.
 - `convert-avif.ts`: AVIF convenience entry.
 - `convert-webp.ts`: WebP convenience entry.
-- `utils.ts`: shared conversion and summary logic.
+- `src/utils.ts`: shared conversion and summary logic.
 
 Refer to `architecture.md` for deeper design details.
 
 ## Contribution Guidelines
 
 - Keep changes scoped to one concern per pull request.
-- Reuse shared logic in `utils.ts` instead of duplicating behavior.
+- Reuse shared logic in `src/utils.ts` instead of duplicating behavior.
 - Preserve existing CLI behavior unless intentionally changing it.
 - Prefer clear errors and explicit validation for CLI arguments.
 - Keep output and logs readable for non-technical users.

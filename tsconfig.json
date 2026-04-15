@@ -1,10 +1,12 @@
 {
-  "extends": "../tsconfig.json",
   "compilerOptions": {
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "outDir": "./dist",
     "rootDir": "."
   },
-  "include": ["*.ts"],
+  "include": ["*.ts", "src/convert.ts", "src/utils.ts"],
   "exclude": ["node_modules", "dist"]
 }

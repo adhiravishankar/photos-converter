@@ -13,3 +13,4 @@
 *.tiff
 *.bmp
 
+node_modules

@@ -2,32 +2,15 @@ import * as path from 'path';
 import * as fse from 'fs-extra';
 import pLimit from 'p-limit';
 import sharp from 'sharp';
-import { v4 } from 'uuid';
+import {
+  createFileNameGenerator,
+  DEFAULT_FILE_NAME_STRATEGY,
+} from './filename-strategy';
+import { type ConversionResult, type ConvertOptions, type OutputFormat } from './types';
 
 export const DEFAULT_INPUT_DIR = './input_images';
 export const DEFAULT_OUTPUT_DIR = './output_images';
 export const SUPPORTED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.tiff', '.bmp', '.avif'];
-
-export type OutputFormat = 'avif' | 'webp';
-
-export interface ConversionResult {
-  fileName: string;
-  success: boolean;
-  error?: string;
-  inputSize?: number;
-  outputSize?: number;
-  dimensions?: {
-    width: number;
-    height: number;
-  };
-}
-
-export interface ConvertOptions {
-  format: OutputFormat;
-  inputDir?: string;
-  outputDir?: string;
-  concurrency?: number;
-}
 
 function normalizeFormat(format: string): OutputFormat {
   if (format === 'avif' || format === 'webp') {
@@ -52,11 +35,12 @@ async function processImage(
   format: OutputFormat,
   inputDir: string,
   outputDir: string,
+  getNextOutputBaseName: (sourceFileName: string) => string,
 ): Promise<ConversionResult> {
   const fileExtension = path.extname(file).toLowerCase();
   const isNoOpCopy = format === 'avif' && fileExtension === '.avif';
   const inputPath = path.join(inputDir, file);
-  const outputFileName = `${v4()}.${format}`;
+  const outputFileName = `${getNextOutputBaseName(file)}.${format}`;
   const outputPath = path.join(outputDir, outputFileName);
 
   if (isNoOpCopy) {
@@ -192,6 +176,7 @@ export async function convertImages(options: ConvertOptions): Promise<void> {
   const inputDir = options.inputDir ?? DEFAULT_INPUT_DIR;
   const outputDir = options.outputDir ?? DEFAULT_OUTPUT_DIR;
   const concurrency = options.concurrency ?? 12;
+  const fileNameStrategy = options.fileNameStrategy ?? DEFAULT_FILE_NAME_STRATEGY;
 
   console.log(`🚀 Starting image conversion to ${format.toUpperCase()}...\n`);
 
@@ -204,6 +189,7 @@ export async function convertImages(options: ConvertOptions): Promise<void> {
 
     await fse.ensureDir(outputDir);
     console.log(`✅ Output directory '${outputDir}' is ready.\n`);
+    console.log(`📝 File naming strategy: ${fileNameStrategy}\n`);
 
     const files = await fse.readdir(inputDir);
     const imageFiles = files.filter((file: string): boolean => {
@@ -218,10 +204,18 @@ export async function convertImages(options: ConvertOptions): Promise<void> {
 
     console.log(`📁 Found ${imageFiles.length} image(s) to convert:\n`);
 
+    const getNextOutputBaseName = await createFileNameGenerator({
+      outputDir,
+      extension: format,
+      strategy: fileNameStrategy,
+    });
+
     const limit = pLimit(concurrency);
     const results: ConversionResult[] = await Promise.all(
       imageFiles.map((file, index) =>
-        limit(() => processImage(file, index + 1, imageFiles.length, format, inputDir, outputDir)),
+        limit(() =>
+          processImage(file, index + 1, imageFiles.length, format, inputDir, outputDir, getNextOutputBaseName),
+        ),
       ),
     );
 

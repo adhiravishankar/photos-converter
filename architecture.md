@@ -4,15 +4,17 @@
 
 This project provides local image conversion utilities for generating optimized assets from files in `input_images/` and writing converted outputs to `output_images/`.
 
+Dependency installation is package-manager agnostic. Bun is the primary runtime used in examples, but npm/pnpm/yarn can be used as long as scripts and lockfile expectations are respected.
+
 The architecture is intentionally small:
 
-- `convert.ts` is the main CLI entry point.
+- `src/convert.ts` is the main CLI entry point.
 - `convert-avif.ts` and `convert-webp.ts` are thin format-specific entry points.
-- `utils.ts` contains the shared conversion pipeline.
+- `src/utils.ts` contains the shared conversion pipeline.
 
 ## Module Responsibilities
 
-### `convert.ts`
+### `src/convert.ts`
 
 - Parses CLI arguments.
 - Validates target format (`avif` or `webp`).
@@ -20,7 +22,7 @@ The architecture is intentionally small:
   - `--input` / `-i`
   - `--output` / `-o`
   - `--concurrency` / `-c`
-- Calls `convertImages()` from `utils.ts`.
+- Calls `convertImages()` from `src/utils.ts`.
 
 ### `convert-avif.ts`
 
@@ -32,7 +34,7 @@ The architecture is intentionally small:
 - Convenience wrapper that calls shared logic with:
   - `format: 'webp'`
 
-### `utils.ts`
+### `src/utils.ts`
 
 Implements the reusable processing pipeline:
 
@@ -51,7 +53,7 @@ Implements the reusable processing pipeline:
    - If target is AVIF and source is AVIF, copy directly.
    - Otherwise, validate image metadata with `sharp`.
    - Convert to target format (`.avif` or `.webp`).
-4. Write outputs with UUID-based filenames.
+4. Write outputs using the configured file name strategy (default: keep source filename with collision suffixing).
 5. Display aggregated processing stats.
 
 ## Defaults and Configuration
@@ -60,6 +62,7 @@ Implements the reusable processing pipeline:
 - Default output directory: `./output_images`
 - Supported inputs: `.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`, `.tiff`, `.bmp`, `.avif`
 - Default concurrency: `12`
+- Default file naming strategy: `keep-file-name`
 
 ## Runtime Dependencies
 

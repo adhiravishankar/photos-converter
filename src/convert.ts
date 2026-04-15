@@ -1,10 +1,16 @@
-import { convertImages, DEFAULT_INPUT_DIR, DEFAULT_OUTPUT_DIR, type OutputFormat } from './utils';
+import {
+  DEFAULT_FILE_NAME_STRATEGY,
+  type FileNameStrategy,
+} from './filename-strategy';
+import { type OutputFormat } from './types';
+import { convertImages, DEFAULT_INPUT_DIR, DEFAULT_OUTPUT_DIR } from './utils';
 
 interface CliOptions {
   format: OutputFormat;
   inputDir?: string;
   outputDir?: string;
   concurrency?: number;
+  fileNameStrategy?: FileNameStrategy;
 }
 
 function printHelp(): void {
@@ -21,6 +27,7 @@ Options:
   -i, --input <dir>            Input directory (default: ${DEFAULT_INPUT_DIR})
   -o, --output <dir>           Output directory (default: ${DEFAULT_OUTPUT_DIR})
   -c, --concurrency <number>   Parallel workers (default: 12)
+  -n, --name-strategy <mode>   File name strategy: numeric | uuid-v4 | uuid-v7 | keep-file-name (default: ${DEFAULT_FILE_NAME_STRATEGY})
   -h, --help                   Show this help
 `);
 }
@@ -80,6 +87,16 @@ function parseCliArgs(argv: string[]): CliOptions | null {
       continue;
     }
 
+    if (arg === '--name-strategy' || arg === '-n') {
+      const value = argv[index + 1];
+      if (!value) {
+        throw new Error('Missing value for --name-strategy');
+      }
+      options.fileNameStrategy = value as FileNameStrategy;
+      index += 2;
+      continue;
+    }
+
     // First positional argument is treated as format.
     if (!options.format) {
       options.format = arg as OutputFormat;
@@ -92,6 +109,17 @@ function parseCliArgs(argv: string[]): CliOptions | null {
 
   if (options.format !== 'avif' && options.format !== 'webp') {
     throw new Error(`Invalid format '${options.format ?? ''}'. Use 'avif' or 'webp'.`);
+  }
+  if (
+    options.fileNameStrategy !== undefined &&
+    options.fileNameStrategy !== 'numeric' &&
+    options.fileNameStrategy !== 'uuid-v4' &&
+    options.fileNameStrategy !== 'uuid-v7' &&
+    options.fileNameStrategy !== 'keep-file-name'
+  ) {
+    throw new Error(
+      `Invalid --name-strategy '${options.fileNameStrategy}'. Use 'numeric', 'uuid-v4', 'uuid-v7', or 'keep-file-name'.`,
+    );
   }
 
   return options as CliOptions;
