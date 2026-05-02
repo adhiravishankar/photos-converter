@@ -26,7 +26,7 @@ Options:
   -f, --format <format>        Output format (avif/webp)
   -i, --input <dir>            Input directory (default: ${DEFAULT_INPUT_DIR})
   -o, --output <dir>           Output directory (default: ${DEFAULT_OUTPUT_DIR})
-  -c, --concurrency <number>   Parallel workers (default: 12)
+  -c, --concurrency <number>   Parallel workers (default: 8)
   -n, --name-strategy <mode>   File name strategy: numeric | uuid-v4 | uuid-v7 | keep-file-name (default: ${DEFAULT_FILE_NAME_STRATEGY})
   -h, --help                   Show this help
 `);

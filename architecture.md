@@ -61,7 +61,7 @@ Implements the reusable processing pipeline:
 - Default input directory: `./input_images`
 - Default output directory: `./output_images`
 - Supported inputs: `.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`, `.tiff`, `.bmp`, `.avif`
-- Default concurrency: `12`
+- Default concurrency: `8`
 - Default file naming strategy: `keep-file-name`
 
 ## Runtime Dependencies

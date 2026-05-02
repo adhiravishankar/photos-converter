@@ -2,9 +2,8 @@
   "name": "photos-converter",
   "version": "1.0.0",
   "scripts": {
-    "process:scratch": "bun process-scratch.ts",
-    "convert": "bun convert.ts avif",
-    "clean": "rimraf dist node_modules"
+    "convert": "bun ./src/convert.ts avif",
+    "clean": "rimraf dist node_modules input_images output_images"
   },
   "devDependencies": {
     "@types/cli-progress": "^3.11.6",
@@ -16,6 +15,6 @@
     "path": "^0.12.7",
     "redrun": "^13.0.4",
     "sharp": "^0.34.5",
-    "uuid": "13.0.0"
+    "uuid": "14.0.0"
   }
 }

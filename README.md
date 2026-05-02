@@ -59,8 +59,6 @@ Options:
 
 ## Project Structure
 
-- `convert-avif.ts` - AVIF convenience wrapper
-- `convert-webp.ts` - WebP convenience wrapper
 - `src/convert.ts` - unified CLI entry point
 - `src/utils.ts` - shared conversion pipeline
 

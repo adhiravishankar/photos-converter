@@ -25,8 +25,6 @@ bun install
 ## Project Structure
 
 - `src/convert.ts`: CLI entry point.
-- `convert-avif.ts`: AVIF convenience entry.
-- `convert-webp.ts`: WebP convenience entry.
 - `src/utils.ts`: shared conversion and summary logic.
 
 Refer to `architecture.md` for deeper design details.

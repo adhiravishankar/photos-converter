@@ -10,7 +10,7 @@ import { type ConversionResult, type ConvertOptions, type OutputFormat } from '.
 
 export const DEFAULT_INPUT_DIR = './input_images';
 export const DEFAULT_OUTPUT_DIR = './output_images';
-export const SUPPORTED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.tiff', '.bmp', '.avif'];
+export const SUPPORTED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.tif', '.tiff', '.bmp', '.avif'];
 
 function normalizeFormat(format: string): OutputFormat {
   if (format === 'avif' || format === 'webp') {
@@ -67,7 +67,7 @@ async function processImage(
         console.log(`   ⚠️  Could not extract metadata for ${file}`);
       }
 
-      console.log(`   ✅ Copied AVIF: ${outputFileName}`);
+      console.log(`   ✅ Copied File: ${outputFileName}`);
       console.log(`   📊 ${outputFileName} Size: ${inputSizeMB}MB (no conversion)`);
       if (dimensions.width > 0 && dimensions.height > 0) {
         console.log(`   📐 ${outputFileName} Dimensions: ${dimensions.width}x${dimensions.height}\n`);
@@ -175,7 +175,7 @@ export async function convertImages(options: ConvertOptions): Promise<void> {
   const format = normalizeFormat(options.format);
   const inputDir = options.inputDir ?? DEFAULT_INPUT_DIR;
   const outputDir = options.outputDir ?? DEFAULT_OUTPUT_DIR;
-  const concurrency = options.concurrency ?? 12;
+  const concurrency = options.concurrency ?? 8;
   const fileNameStrategy = options.fileNameStrategy ?? DEFAULT_FILE_NAME_STRATEGY;
 
   console.log(`🚀 Starting image conversion to ${format.toUpperCase()}...\n`);

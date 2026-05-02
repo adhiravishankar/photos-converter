@@ -12,5 +12,6 @@
 *.gif
 *.tiff
 *.bmp
+*.tif
 
 node_modules
