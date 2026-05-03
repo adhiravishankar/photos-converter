@@ -1,4 +1,4 @@
-import * as path from 'path';
+import * as path from 'node:path';
 import * as fse from 'fs-extra';
 import { v4, v7 } from 'uuid';
 
